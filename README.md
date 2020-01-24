@@ -1,2 +1,2 @@
-# sas
-simple (or stack) assembler for svm [golang]
+# svm
+simple (or stack) virtual machine with assembler [golang]
