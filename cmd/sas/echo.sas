@@ -1,0 +1,9 @@
+:main
+i@pa!ii@pa!du
+d3
+d1
+i@porifout
+dx71
+idriijumain
+:out
+iha..........

@@ -1,8 +1,9 @@
-:entry
+ijumain
+:out
+i@pa!ii;;....
+d1
+:main
+i@pcaout
+dx48
+iha..........
 
-d64
-idu2*++2/du--
-:test
-shihh
-idrjutest
-ipopopopopopo

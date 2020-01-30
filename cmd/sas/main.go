@@ -15,8 +15,8 @@ func check(e error) {
 }
 
 var line = 0
-var labels = map[string]int{}
-var ops = "..;;exjucaunnxif-i@+@a@p!+!a!pieiqii+*2*2/--++anordrduova@a!pupo"
+var labels = map[string]uint32{}
+var ops = "..;;exjucaunnxif-i@+@a@p!+!a!phaii**/m2*2/--++anordrduova@a!pupo"
 var opa []uint16
 var inc = true;
 
@@ -25,7 +25,7 @@ func main() {
 
 	opa = make([]uint16, 32)
 	for i := 0; i < 32; i++ {
-		opa[i] = uint16(ops[2*i+1]) + uint16(ops[2*i] << 8)
+		opa[i] = uint16(ops[2*i+1]) + (uint16(ops[2*i]) << 8)
 	}
 
 	if len(os.Args) < 3 {
@@ -87,7 +87,7 @@ func main() {
 }
 
 func label(in *bufio.Reader) {
-	line := 0
+	line := uint32(0)
 	var err error
 	var buf []byte
 	for err == nil {
@@ -113,14 +113,16 @@ func parse(buf []byte) (uint32, bool) {
 	case 'i':
 		for i := 0; i < 6; i++ {
 			var temp uint16
-			temp = uint16(buf[2*i+2])+uint16(buf[2*i+1]<<8)
+			temp = uint16(buf[2*i+2])+(uint16(buf[2*i+1])<<8)
+			fmt.Printf("opcode: %d:%s %x\n", line, string(buf[2*i+1:2*i+3]), temp)
 			j := 0
 			for ;j < 32 && temp != opa[j]; j++ { }
 			if(j == 32) {
 				fmt.Printf("Unrecognized opcode: %d:%s\n", line, string(buf[2*i+1:2*i+3]))
 				os.Exit(1)
 			}
-				
+			
+			fmt.Printf("op %x\n", j)
 			op <<= 5
 			op |= uint32(j)
 
@@ -141,7 +143,7 @@ func parse(buf []byte) (uint32, bool) {
 					os.Exit(1)
 				}
 				op <<= size
-				op |= uint32(l)
+				op |= l
 				return op, true
 			}
 		}
@@ -164,10 +166,14 @@ func parse(buf []byte) (uint32, bool) {
 		op += uint32(buf[3]) << 16
 		op += uint32(buf[4]) << 24
 		return op, true
+	case 'r':
+		op = labels[string(buf[1:])]
+		fmt.Printf("ref: %s:%d %v\n", string(buf[1:]), op, labels)
+		return op, true
 	case ':':
 		return 0, false
 	default:
-		fmt.Printf("Unrecognized directive: %d:%c", line, buf[0])
+		fmt.Printf("Unrecognized directive: %d:%c\n", line, buf[0])
 		os.Exit(1)
 	}
 	return 0, false
