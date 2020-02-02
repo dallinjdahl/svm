@@ -1,15 +1,15 @@
 # svm
 simple (or stack) virtual machine with assembler [golang]
 
-## vm
+## VM
 
-### structure
+### Structure
 
 svm is a stack based virtual machine with a single register.  This
 register is used in autoincrement instructions as well as an IO port
 for communication with the outside world, through the `ii` instruction.
 
-### instructions
+### Instructions
 
 The vm has 5 bit opcodes packed into 32 bit words.
 Instructions that require an address use the remainder of the word
@@ -36,15 +36,14 @@ local variables as illustrated in the colorforth link below.
 IO is accomplished through the `ii` instruction.  It takes a device id in the `a` register,
 and any arguments on the stack.  The devices are as follows:
 
-```
 ID	|	Name	|	Argument	|	Description
+---	|	---	|	---	|	---	|
 0	|	VM		|	0			|	Pushes the amount of memory available to the stack
-	|			|	1			|	Pushes the number of devices supported to the stack
+0	|	VM		|	1			|	Pushes the number of devices supported to the stack
 1	|	cout	|	'c'			|	Outputs the low 8 bits as an ascii character
 2	|	block	|	0, addr		|	Read a block from the block file into addr+1 (block # is at addr)
-	|			|	1, addr		|	Write a block to the block file from addr+1 (block # is at addr)
+2	|	block	|	1, addr		|	Write a block to the block file from addr+1 (block # is at addr)
 3	|	cin		|				| 	Pushes the next byte of input from the keyboard to the stack
-```
 
 #### Blocks
 Instead of supporting generic file access, svm supports access to a block file, being treated
@@ -53,7 +52,7 @@ which allow for reloading the vm.  In the future, access to files provided on th
 will also be provided, analogous to disk drives in a real machine, still via the block mechanism.
 Blocks are typically cached in memory when used, which allows for memory mapped disk access.
 
-## assembler
+## Assembler
 
 The assembler for svm is called sas.  sas is a simple 2 pass assembler with support for lables and comments,
 inspired by `muri`, the assembler for retro forth.
@@ -89,7 +88,7 @@ rmain
 
 `/` lines are comments, and are ignored by the assembler.
 
-### opcodes
+### Opcodes
 
 ```
 00 ..	08 -i	10 ii	18 or 
