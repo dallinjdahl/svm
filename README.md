@@ -22,7 +22,7 @@ local variables as illustrated in the colorforth link below.
 
 ```
 00 . (nop)  	08 -if	10 ii	18 or 
-01 ; (ret)		09 @+	11 *	19 drop
+01 ; (ret)	09 @+	11 *	19 drop
 02 ex		0a @	12 /mod	1a dup
 03 jump		0b @p	13 2*	1b over
 04 call		0c !+	14 2/	1c a
