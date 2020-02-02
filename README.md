@@ -104,5 +104,7 @@ rmain
 ## References
 These documents helped flesh out the instruction set and may provide added insight into the operation
 of the vm.
+
 https://colorforth.github.io/inst.htm
+
 http://retroforth.org/docs/The_Ngaro_Virtual_Machine.html
