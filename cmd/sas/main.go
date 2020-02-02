@@ -96,7 +96,7 @@ func label(in *bufio.Reader) {
 			labels[string(buf[1:])] = line
 			continue
 		}
-		if len(buf) > 1 {
+		if len(buf) > 1 && buf[0] != '/' {
 			line++
 		}
 	}
@@ -137,8 +137,12 @@ func parse(buf []byte) (uint32, bool) {
 				fallthrough
 			case opa[8]:
 				size := (((5 - i)*5) + 2)
-				l := labels[string(buf[2*i+3:])]
-				if l >= 1 << size{
+				l, ok := labels[string(buf[2*i+3:])]
+				if !ok {
+					fmt.Printf("Unrecognized label: %d%s\n", line, buf[2*i+3:])
+					os.Exit(1)
+				}
+				if l >= (1 << size){
 					fmt.Printf("Jump too long: %d%s\n", line, buf[2*i+3:])
 					os.Exit(1)
 				}
@@ -151,11 +155,11 @@ func parse(buf []byte) (uint32, bool) {
 		return op, true
 	case 'd':
 		var err error
-		var big int64
+		var big uint64
 		if buf[1] == 'x' {
-			big, err = strconv.ParseInt(string(buf[2:len(buf)-1]), 16, 32)
+			big, err = strconv.ParseUint(string(buf[2:len(buf)-1]), 16, 32)
 		} else {
-			big, err = strconv.ParseInt(string(buf[1:len(buf)-1]), 10, 32)
+			big, err = strconv.ParseUint(string(buf[1:len(buf)-1]), 10, 32)
 		}
 		check(err)
 		op = uint32(big)
@@ -171,6 +175,8 @@ func parse(buf []byte) (uint32, bool) {
 		fmt.Printf("ref: %s:%d %v\n", string(buf[1:]), op, labels)
 		return op, true
 	case ':':
+		return 0, false
+	case '/':
 		return 0, false
 	default:
 		fmt.Printf("Unrecognized directive: %d:%c\n", line, buf[0])
