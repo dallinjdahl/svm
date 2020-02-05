@@ -202,7 +202,7 @@ func pif() {
 }
 
 func pnif() {
-	if dstack[dp-1] < 0 {
+	if dstack[dp-1] > (1 << 31) {
 		slot = 6
 		return
 	}
